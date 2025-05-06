@@ -18,6 +18,13 @@ mongoose.connect('mongodb://localhost:27017/CollegeFines')
     console.log("MongoDb Error",err);
 })
 
+const loginRoute = require('./routes/login.route')
+const adminRoute = require('./routes/admin.route')
+const studentRoute = require('./routes/student.route')
+
+app.use("/",loginRoute)
+app.use("/admin",adminRoute)
+app.use("/student",studentRoute)
 
 app.listen(port,()=>{
     console.log('Server is running')

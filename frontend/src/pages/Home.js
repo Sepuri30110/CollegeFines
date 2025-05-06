@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import '../styles/Home.css';
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [activeTab, setActiveTab] = useState('student');
+  const navigate = useNavigate()
 
   const [details, setDetails] = useState({
     uname: '',
@@ -13,9 +15,9 @@ function Home() {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      await axios.post("http://localhost:4000/login")
+      await axios.post("http://localhost:4000/login",{details})
       .then((res)=>{
-        console.log(res)
+        navigate('/admin')
       })
       .catch((err)=>{
         console.log(err)

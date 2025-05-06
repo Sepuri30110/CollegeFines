@@ -1,4 +1,4 @@
-const mongooge = require('mongoose')
+const mongoose = require('mongoose')
 const model = new mongoose.Schema({
     id: {
         type: String,
