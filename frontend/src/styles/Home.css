@@ -1,0 +1,54 @@
+.slider-tabs {
+    position: relative;
+    display: flex;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 1rem;
+  }
+  
+  .slider-tab {
+    flex: 1;
+    padding: 0.75rem;
+    text-align: center;
+    background: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  .slider-highlight {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100px;
+    height: 3px;
+    background-color: #2563eb; /* blue-600 */
+    transition: left 0.3s ease;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 0.625rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    background-color: #2563eb;
+    color: white;
+    padding: 0.625rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #374151;
+  }
+  
+  .bg-gradient-left {
+    background-image: linear-gradient(to bottom right, #2563eb, #1e40af); /* from-blue-600 to-blue-800 */
+  }
+  

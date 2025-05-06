@@ -7,7 +7,7 @@ import Student from './pages/Student';
 
 function App() {
   return (
-    <div style={{width:'100vw', height:'100vh'}}>
+    <div className="min-h-screen flex items-center justify-center p-4">
       <BrowserRouter>
         <Routes>
           <Route exact path='/' element={<Home />} />
