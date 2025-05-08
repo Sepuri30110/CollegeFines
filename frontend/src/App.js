@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import Admin from './pages/Admin';
 import Student from './pages/Student';
 
+import PrivatePath from './PrivatePath';
+
 function App() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -12,7 +14,9 @@ function App() {
         <Routes>
           <Route exact path='/' element={<Home />} />
           <Route exact path='/Student' element={<Student />} />
-          <Route exact path='/Admin' element={<Admin />} />
+          <Route element={<PrivatePath/>}>
+            <Route exact path='/Admin' element={<Admin />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>
