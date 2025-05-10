@@ -52,7 +52,7 @@ function NewFineEntry() {
 
     const handleChange = (e) => {
         const { name, value } = e.target
-        let email = ""
+        let email = details.student_email
         if (name === "student_id") {
             std.forEach((student) => {
                 if (student.id === value) {
@@ -60,7 +60,7 @@ function NewFineEntry() {
                 }
             })
         }
-        let amount = "0"
+        let amount = details.amount
         if (name === "fine_category") {
             amount = fineCategories.find(category => category.type === value).amt;
         }
@@ -76,7 +76,18 @@ function NewFineEntry() {
     }
 
     const handleSubmit = async(e) => {
-        
+        e.preventDefault();
+        try {
+            await axios.post("http://localhost:4000/admin/createfine",{details})
+            .then((res)=>{
+                navigate("/Admin/ViewFines")
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return (
@@ -186,7 +197,6 @@ function NewFineEntry() {
                                     name="reason"
                                     rows="3"
                                     maxLength="200"
-                                    required
                                     value={details.reason}
                                     onChange={(e) => { handleChange(e) }}
                                 ></textarea>

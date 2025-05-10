@@ -8,6 +8,7 @@ import Student from './pages/Student';
 import PrivatePath from './PrivatePath';
 
 import NewFineEntry from './pages/NewFineEntry';
+import ViewFines from './pages/ViewFines';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route element={<PrivatePath />}>
             <Route exact path='/Admin' element={<Admin />} />
             <Route exact path='/Admin/NewFineEntry' element={<NewFineEntry />} />
+            <Route exact path='/Admin/ViewFines' element={<ViewFines />} />
           </Route>
         </Routes>
       </BrowserRouter>

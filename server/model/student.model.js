@@ -14,7 +14,7 @@ const model = new mongoose.Schema({
         required: true,
         unique: true
     },
-    class: {
+    branch: {
         type: String,
         required: true
     },
@@ -23,7 +23,7 @@ const model = new mongoose.Schema({
         required: true,
         enum: ["A", "B", "C"]
     },
-    fines: [{ type: String }]
+    fines: [{ type: String, default:[] }]
 },{timestamps:true})
 
 module.exports = mongoose.model('Student', model)
