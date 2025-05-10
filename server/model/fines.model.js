@@ -40,6 +40,6 @@ const model = new mongoose.Schema({
         type: Date,
         required: true
     }
-})
+},{timestamps:true})
 
 module.exports = mongoose.model('Fines', model)

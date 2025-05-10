@@ -24,6 +24,6 @@ const model = new mongoose.Schema({
         enum: ["A", "B", "C"]
     },
     fines: [{ type: String }]
-})
+},{timestamps:true})
 
 module.exports = mongoose.model('Student', model)

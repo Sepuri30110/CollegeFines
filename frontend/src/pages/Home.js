@@ -12,6 +12,8 @@ function Home() {
     password: ''
   })
 
+ const [studentId, setStudentId] = useState('');
+
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
@@ -84,15 +86,17 @@ function Home() {
 
             {activeTab === 'student' ? (
               <div className="form-content" id="student_form">
-                <form className="space-y-6" onSubmit={{}}>
+                <form className="space-y-6">
                   <div>
-                    <label htmlFor="student_id" className="label">Student ID</label>
+                    <label htmlFor="studentId" className="label">Student ID</label>
                     <input
                       type="text"
-                      name="student_id"
-                      id="student_id"
+                      value={studentId}
+                      name="studentId"
+                      id="studentId"
                       placeholder="Enter your Roll No"
                       className="form-input"
+                      onChange={(e)=>{setStudentId(e.target.value)}}
                     />
                   </div>
                   <div>

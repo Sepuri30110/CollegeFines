@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   FaHome,
   FaPlus,
@@ -11,24 +11,27 @@ import {
 } from "react-icons/fa";
 
 function Admin() {
+
+  const navigate = useNavigate()
+
   return (
     <div className="bg-gray-50 h-screen">
       <main className="flex h-screen">
         <aside className="bg-blue-600 text-white shadow-md w-64 py-4 px-4">
           <div className="text-2xl font-semibold mb-8">Admin Menu</div>
           <nav>
-            <Link to="" className="block py-2 px-2 hover:bg-blue-800 rounded bg-blue-700 font-semibold">
+            <Link className="block py-2 px-2 hover:bg-blue-800 rounded bg-blue-700 font-semibold">
               <FaHome className="mr-2 w-6 inline-block text-center" /> Home
             </Link>
-            <Link to="fine" className="block py-2 px-2 hover:bg-blue-800 rounded">
+            <Link to="NewFineEntry/" className="block py-2 px-2 hover:bg-blue-800 rounded">
               <FaPlus className="mr-2 w-6 inline-block text-center" /> New Fine Entry
             </Link>
-            <Link to="view-fines" className="block py-2 px-2 hover:bg-blue-800 rounded">
+            <Link to="ViewFines/" className="block py-2 px-2 hover:bg-blue-800 rounded">
               <FaFileInvoiceDollar className="mr-2 w-6 inline-block text-center" /> View Fines
             </Link>
-            <Link to="/" className="block mt-4 py-2 px-2 hover:bg-blue-800 rounded">
+            <p onClick={()=>{navigate("/")}} className="block mt-4 py-2 px-2 hover:bg-blue-800 rounded cursor-pointer">
               <FaSignOutAlt className="mr-2 w-6 inline-block text-center" /> Logout
-            </Link>
+            </p>
           </nav>
         </aside>
 

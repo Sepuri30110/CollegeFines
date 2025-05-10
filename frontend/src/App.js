@@ -7,6 +7,8 @@ import Student from './pages/Student';
 
 import PrivatePath from './PrivatePath';
 
+import NewFineEntry from './pages/NewFineEntry';
+
 function App() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -14,8 +16,9 @@ function App() {
         <Routes>
           <Route exact path='/' element={<Home />} />
           <Route exact path='/Student' element={<Student />} />
-          <Route element={<PrivatePath/>}>
+          <Route element={<PrivatePath />}>
             <Route exact path='/Admin' element={<Admin />} />
+            <Route exact path='/Admin/NewFineEntry' element={<NewFineEntry />} />
           </Route>
         </Routes>
       </BrowserRouter>
