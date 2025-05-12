@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaFileInvoiceDollar, FaSearch, FaChevronDown, FaCalendar, FaFilter, FaTimes, FaHome, FaPlus, FaSignOutAlt, } from "react-icons/fa";
+import { FaFileInvoiceDollar, FaSearch, FaFilter, FaTimes, FaHome, FaPlus, FaSignOutAlt, } from "react-icons/fa";
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -9,8 +9,11 @@ function ViewFines() {
   const [filters, setFilters] = useState({
     batch: "",
     due_date: "",
-    student_id: ""
   })
+
+  const [batches, setBatches] = useState([])
+
+  const [studentId, setStudentId] = useState("")
 
   const [fines, setFines] = useState([])
   const [filteredfines, setFilteredFines] = useState([])
@@ -18,6 +21,19 @@ function ViewFines() {
 
   useEffect(() => {
     async function fetchData() {
+
+      setBatches([])
+      let d = new Date().toISOString()
+      let curr_batch = Number(d.toString().substring(2,4))
+      let batches = []
+      batches.push("20"+(curr_batch-5)+" - Batch")
+      batches.push("20"+(curr_batch-4)+" - Batch")
+      batches.push("20"+(curr_batch-3)+" - Batch")
+      batches.push("20"+(curr_batch-2)+" - Batch")
+      batches.push("20"+(curr_batch-1)+" - Batch")
+      batches.push("20"+(curr_batch)+" - Batch")
+      setBatches(batches)
+
       try {
         await axios.get("http://localhost:4000/admin/getfines")
           .then((res) => {
@@ -40,6 +56,39 @@ function ViewFines() {
     }
     fetchData()
   }, [])
+
+  const handleClear = () => {
+    setFilters({
+      batch: "",
+      due_date: ""
+    })
+    setFilteredFines(fines)
+  }
+
+  const handleFilter = (e) => {
+    const { name, value } = e.target
+    setFilters({
+      ...filters,
+      [name]: value
+    })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    let f_fines = fines
+    if (filters.due_date) {
+      f_fines = f_fines.filter(fine => fine.due_date.toString().split("T")[0] === filters.due_date)
+    }
+    if (filters.batch) {
+      f_fines = f_fines.filter(fine => fine.studentId.substring(0,2) === filters.batch)
+    }
+    if (studentId && studentId.trim()) {
+      const regex = new RegExp(studentId.trim(), 'i');
+      f_fines = f_fines.filter(fine => regex.test(fine.studentId));
+    }
+
+    setFilteredFines(f_fines)
+  }
 
   return (
     <div className="flex bg-gray-50 h-screen">
@@ -77,6 +126,8 @@ function ViewFines() {
                   <input
                     type="text"
                     name="student_id"
+                    value={studentId}
+                    onChange={(e) => { setStudentId(e.target.value) }}
                     placeholder="Search by Student ID"
                     className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
                   />
@@ -84,12 +135,14 @@ function ViewFines() {
                 </div>
                 <button
                   type="submit"
+                  onClick={handleSubmit}
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-sm"
                 >
                   Search
                 </button>
                 <button
                   type="button"
+                  onClick={()=>{setStudentId("")}}
                   className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-sm"
                 >
                   Clear
@@ -102,29 +155,32 @@ function ViewFines() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
               <div className="filter-group relative">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Batch</label>
-                <select className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none">
+                <select name="batch" value={filters.batch} onChange={(e) => { handleFilter(e) }} className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none">
                   <option value="">All Batches</option>
+                  {
+                    batches.map((batch,i)=>(
+                      <option key={i} value={batch.substring(2,4)}>{batch}</option>
+                    ))
+                  }
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <FaChevronDown />
-                </div>
               </div>
 
               <div className="filter-group relative">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
                 <input
                   type="date"
+                  name="due_date"
+                  value={filters.due_date}
+                  onChange={(e) => { handleFilter(e) }}
                   className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <FaCalendar />
-                </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">&nbsp;</label>
                 <button
                   type="submit"
+                  onClick={handleSubmit}
                   className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center"
                 >
                   <FaFilter className="mr-2" />
@@ -137,6 +193,7 @@ function ViewFines() {
                 <button
                   type="button"
                   className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 flex items-center"
+                  onClick={handleClear}
                 >
                   <FaTimes className="mr-2" />
                   Clear
