@@ -10,6 +10,8 @@ import PrivatePath from './PrivatePath';
 import NewFineEntry from './pages/NewFineEntry';
 import ViewFines from './pages/ViewFines';
 
+import { ToastContainer } from 'react-toastify';
+
 function App() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -24,6 +26,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      <ToastContainer/>
     </div>
   )
 }

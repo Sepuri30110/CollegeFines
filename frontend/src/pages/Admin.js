@@ -9,10 +9,67 @@ import {
   FaHourglassHalf,
   FaListOl
 } from "react-icons/fa";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 function Admin() {
 
   const navigate = useNavigate()
+  const [details, setDetails] = useState({
+    total_collected: 0,
+    total_pending: 0,
+    total_fines: 0,
+    total_batches: 0,
+    batches: []
+  })
+  const [analysis, setAnalysis] = useState({
+    total_collected: "0.00",
+    total_pending: "0",
+    total_fines: "0",
+    total_batches: "0",
+    batches: []
+  })
+
+  useEffect(() => {
+    async function func() {
+      let d = new Date().toISOString()
+      let curr_batch = Number(d.toString().substring(2, 4))
+      let batches = [];
+      for (let i = 5; i >= 0; i--) {
+        batches.push({
+          batch: curr_batch - i,
+          total_fines: 0,
+          total_amount: "0.00"
+        });
+      }
+      setDetails(prev => ({
+        ...prev,
+        batches: batches
+      }))
+      setAnalysis(prev=>({
+        ...prev,
+        batches: batches
+      }))
+    }
+    func()
+  }, [])
+
+  useEffect(() => {
+    if (!details.batches || details.batches.length === 0) return;
+
+    const fetchAnalysis = async () => {
+      try {
+        console.log(details)
+        const res = await axios.post("http://localhost:4000/admin/getAnalysis", { details });
+        setDetails(res.data)
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchAnalysis();
+    // eslint-disable-next-line
+  }, [analysis.batches]);
 
   return (
     <div className="bg-gray-50 h-screen">
@@ -29,7 +86,7 @@ function Admin() {
             <Link to="ViewFines/" className="block py-2 px-2 hover:bg-blue-800 rounded">
               <FaFileInvoiceDollar className="mr-2 w-6 inline-block text-center" /> View Fines
             </Link>
-            <p onClick={()=>{navigate("/")}} className="block mt-4 py-2 px-2 hover:bg-blue-800 rounded cursor-pointer">
+            <p onClick={() => { navigate("/") }} className="block mt-4 py-2 px-2 hover:bg-blue-800 rounded cursor-pointer">
               <FaSignOutAlt className="mr-2 w-6 inline-block text-center" /> Logout
             </p>
           </nav>
@@ -51,7 +108,7 @@ function Admin() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium">Total Collected</p>
-                  <p className="text-2xl font-bold text-gray-800">₹ 0.00</p>
+                  <p className="text-2xl font-bold text-gray-800">₹ {details.total_collected}</p>
                 </div>
               </div>
 
@@ -61,7 +118,7 @@ function Admin() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium">Total Pending Fines</p>
-                  <p className="text-2xl font-bold text-gray-800">0</p>
+                  <p className="text-2xl font-bold text-gray-800">{details.total_pending}</p>
                 </div>
               </div>
 
@@ -71,7 +128,7 @@ function Admin() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium">Total Fines Issued</p>
-                  <p className="text-2xl font-bold text-gray-800">0</p>
+                  <p className="text-2xl font-bold text-gray-800">{details.total_fines}</p>
                 </div>
               </div>
 
@@ -81,7 +138,7 @@ function Admin() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium">Batches with Fines</p>
-                  <p className="text-2xl font-bold text-gray-800">0</p>
+                  <p className="text-2xl font-bold text-gray-800">{details.total_batches}</p>
                 </div>
               </div>
             </div>
@@ -99,11 +156,13 @@ function Admin() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    <tr className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">2025</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹ 0.00</td>
-                    </tr>
+                    {details.batches.map((batch, i) => (
+                      <tr key={i} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">20{batch.batch}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{batch.total_fines}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹ {batch.total_amount}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
