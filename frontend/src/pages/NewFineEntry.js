@@ -105,7 +105,7 @@ function NewFineEntry() {
                         <Link to="/Admin/ViewFines" className="block py-2 px-2 hover:bg-blue-800 rounded">
                             <FaFileInvoiceDollar className="mr-2 w-6 inline-block text-center" /> View Fines
                         </Link>
-                        <p onClick={() => { navigate("/") }} className="block mt-4 py-2 px-2 hover:bg-blue-800 rounded">
+                        <p onClick={() => { navigate("/") }} className="block mt-4 py-2 px-2 hover:bg-blue-800 rounded cursor-pointer">
                             <FaSignOutAlt className="mr-2 w-6 inline-block text-center" /> Logout
                         </p>
                     </nav>

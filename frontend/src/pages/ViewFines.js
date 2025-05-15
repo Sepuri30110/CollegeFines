@@ -19,19 +19,21 @@ function ViewFines() {
   const [filteredfines, setFilteredFines] = useState([])
   const [students, setStudents] = useState([])
 
+  const [approve,setApprove] = useState(false)
+
   useEffect(() => {
     async function fetchData() {
 
       setBatches([])
       let d = new Date().toISOString()
-      let curr_batch = Number(d.toString().substring(2,4))
+      let curr_batch = Number(d.toString().substring(2, 4))
       let batches = []
-      batches.push("20"+(curr_batch-5)+" - Batch")
-      batches.push("20"+(curr_batch-4)+" - Batch")
-      batches.push("20"+(curr_batch-3)+" - Batch")
-      batches.push("20"+(curr_batch-2)+" - Batch")
-      batches.push("20"+(curr_batch-1)+" - Batch")
-      batches.push("20"+(curr_batch)+" - Batch")
+      batches.push("20" + (curr_batch - 5) + " - Batch")
+      batches.push("20" + (curr_batch - 4) + " - Batch")
+      batches.push("20" + (curr_batch - 3) + " - Batch")
+      batches.push("20" + (curr_batch - 2) + " - Batch")
+      batches.push("20" + (curr_batch - 1) + " - Batch")
+      batches.push("20" + (curr_batch) + " - Batch")
       setBatches(batches)
 
       try {
@@ -55,7 +57,7 @@ function ViewFines() {
       }
     }
     fetchData()
-  }, [])
+  }, [approve])
 
   const handleClear = () => {
     setFilters({
@@ -80,7 +82,7 @@ function ViewFines() {
       f_fines = f_fines.filter(fine => fine.due_date.toString().split("T")[0] === filters.due_date)
     }
     if (filters.batch) {
-      f_fines = f_fines.filter(fine => fine.studentId.substring(0,2) === filters.batch)
+      f_fines = f_fines.filter(fine => fine.studentId.substring(0, 2) === filters.batch)
     }
     if (studentId && studentId.trim()) {
       const regex = new RegExp(studentId.trim(), 'i');
@@ -88,6 +90,20 @@ function ViewFines() {
     }
 
     setFilteredFines(f_fines)
+  }
+
+  const handleApprove = async (id) => {
+    try {
+      axios.post('http://localhost:4000/admin/paymentApproval', { id })
+        .then((res) => {
+          setApprove(!approve)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (
@@ -105,7 +121,7 @@ function ViewFines() {
             <Link className="block py-2 px-2 hover:bg-blue-800 rounded bg-blue-700 font-semibold">
               <FaFileInvoiceDollar className="mr-2 w-6 inline-block text-center" /> View Fines
             </Link>
-            <p onClick={() => { navigate("/") }} className="block mt-4 py-2 px-2 hover:bg-blue-800 rounded">
+            <p onClick={() => { navigate("/") }} className="block mt-4 py-2 px-2 hover:bg-blue-800 rounded cursor-pointer">
               <FaSignOutAlt className="mr-2 w-6 inline-block text-center" /> Logout
             </p>
           </nav>
@@ -142,7 +158,7 @@ function ViewFines() {
                 </button>
                 <button
                   type="button"
-                  onClick={()=>{setStudentId("")}}
+                  onClick={() => { setStudentId("") }}
                   className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-sm"
                 >
                   Clear
@@ -158,8 +174,8 @@ function ViewFines() {
                 <select name="batch" value={filters.batch} onChange={(e) => { handleFilter(e) }} className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none">
                   <option value="">All Batches</option>
                   {
-                    batches.map((batch,i)=>(
-                      <option key={i} value={batch.substring(2,4)}>{batch}</option>
+                    batches.map((batch, i) => (
+                      <option key={i} value={batch.substring(2, 4)}>{batch}</option>
                     ))
                   }
                 </select>
@@ -255,8 +271,11 @@ function ViewFines() {
                         {fine.status}
                       </td>
                       <td className="px-3 py-3 border-b border-gray-200 bg-white text-sm text-center">
-                        <button className="text-red-600 hover:text-red-800 text-xs font-bold py-1 px-2 rounded">
-                          Delete
+                        <button className="text-red-600 hover:text-red-800 text-xs font-bold py-1 px-2 rounded cursor-pointer"
+                          disabled={fine.status !== "pending_approval" && fine.txnId}
+                          onClick={() => handleApprove(fine.id)}
+                        >
+                          Approve
                         </button>
                       </td>
                     </tr>

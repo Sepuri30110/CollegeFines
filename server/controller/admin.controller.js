@@ -74,11 +74,23 @@ const getAnalysis = async (req, res) => {
         })
         res.status(200).json(details)
     } catch (err) {
-        console.log(err)
+        res.status(400).json("Internal Error")
+    }
+}
+
+const paymentApproval = async(req,res)=>{
+    try{
+        const { id } = req.body;
+        const fine = await finesModel.findOneAndUpdate({ id: id },{status : "paid"},{new : true})
+        if (!fine) {
+            return res.status(404).json("Fine not found");
+        }
+        res.status(200).json(fine);
+    } catch(err){
         res.status(400).json("Internal Error")
     }
 }
 
 
 
-module.exports = { getDetails, createfine, getfines, getAnalysis }
+module.exports = { getDetails, createfine, getfines, getAnalysis, paymentApproval }

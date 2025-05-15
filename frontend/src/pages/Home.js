@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/Home.css';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
@@ -39,7 +39,9 @@ function Home() {
     })
   }
 
-
+  useEffect(()=>{
+    localStorage.clear()
+  },[])
 
   return (
     <div className="max-w-6xl w-full bg-white rounded-2xl shadow-xl overflow-hidden">
